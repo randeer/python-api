@@ -3,7 +3,7 @@ Unicorn API is a versatile Python-based RESTful API designed for managing and ma
 
 ### Features
 **CRUD Operations:** Perform Create, Read, Update, and Delete operations on unicorn entities.
-**Flexible Querying: **Retrieve unicorns based on various parameters such as age, color, horn length, and more.
+**Flexible Querying:** Retrieve unicorns based on various parameters such as age, color, horn length, and more.
 **Authentication:** Secure your API with token-based authentication to protect sensitive unicorn data.
-**Scalability: **Built to handle large datasets of unicorns with optimal performance.
+**Scalability:** Built to handle large datasets of unicorns with optimal performance.
 **Documentation:** Comprehensive API documentation to quickly get started and understand available endpoints.
