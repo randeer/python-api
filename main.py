@@ -6,6 +6,8 @@ import aiomysql
 import logging
 import os
 from pathlib import Path
+import shutil
+import yaml
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -120,6 +122,68 @@ async def push_data_db(user_info: UserInfo):
     except Exception as e:
         logger.error(f"Unexpected error in push_data_db: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to insert into database: {str(e)}")
+
+class FolderInfo(BaseModel):
+    userID: int
+
+@app.post("/copy_template_folder/")
+async def copy_template_folder(folder_info: FolderInfo):
+    parent_folder = "users"
+    user_folder = f"user_{folder_info.userID}"
+    full_path = os.path.join(parent_folder, user_folder)
+    template_folder = "k8s-template"
+    
+    try:
+        # Check if the user folder exists
+        if not os.path.exists(full_path):
+            raise FileNotFoundError(f"User folder '{full_path}' not found")
+        
+        # Copy the entire k8s-template folder to the user folder
+        dst_folder = os.path.join(full_path, os.path.basename(template_folder))
+        shutil.copytree(template_folder, dst_folder)
+        
+        logger.info(f"Copied {template_folder} to {dst_folder}")
+        return {"message": f"Template folder copied to '{dst_folder}' successfully"}
+    except FileNotFoundError as e:
+        logger.error(str(e))
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        logger.error(f"Failed to copy template folder: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to copy template folder: {str(e)}")
+
+async def update_template_file(user_info: UserInfo):
+    parent_folder = "users"
+    user_folder = f"user_{user_info.userID}"
+    template_file = os.path.join(parent_folder, user_folder, "k8s-template", "issuer_template.yml")
+    
+    try:
+        # Read the template file
+        with open(template_file, 'r') as file:
+            content = file.read()
+        
+        # Replace placeholders
+        content = content.replace('{{ userID }}', str(user_info.userID))
+        content = content.replace('{{ email }}', user_info.email)
+        
+        # Parse the updated content as YAML
+        yaml_content = yaml.safe_load(content)
+        
+        # Write the updated YAML back to the file
+        with open(template_file, 'w') as file:
+            yaml.dump(yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"Template file '{template_file}' updated successfully")
+        return {"message": f"Template file '{template_file}' updated successfully"}
+    except FileNotFoundError:
+        logger.error(f"Template file '{template_file}' not found")
+        raise HTTPException(status_code=404, detail=f"Template file '{template_file}' not found")
+    except Exception as e:
+        logger.error(f"Failed to update template file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update template file: {str(e)}")
+
+@app.post("/update_template_file/")
+async def update_template_file_endpoint(user_info: UserInfo):
+    return await update_template_file(user_info)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

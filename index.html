@@ -99,6 +99,42 @@
                 console.log('Create folder successful:', createFolderResponse);
                 resultDiv.innerHTML += '<br><br>Create Folder Response: ' + JSON.stringify(createFolderResponse);
                 
+                return fetch('http://20.1.190.133:8000/copy_template_folder/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userID: formData.userID })
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(copyTemplateResponse => {
+                console.log('Copy template successful:', copyTemplateResponse);
+                resultDiv.innerHTML += '<br><br>Copy Template Response: ' + JSON.stringify(copyTemplateResponse);
+                
+                return fetch('http://20.1.190.133:8000/update_template_file/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(updateTemplateResponse => {
+                console.log('Update template successful:', updateTemplateResponse);
+                resultDiv.innerHTML += '<br><br>Update Template Response: ' + JSON.stringify(updateTemplateResponse);
+                
                 // Clear input fields
                 document.getElementById('username').value = '';
                 document.getElementById('email').value = '';
