@@ -151,39 +151,167 @@ async def copy_template_folder(folder_info: FolderInfo):
         logger.error(f"Failed to copy template folder: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to copy template folder: {str(e)}")
 
-async def update_template_file(user_info: UserInfo):
+async def update_template_files(user_info: UserInfo):
     parent_folder = "users"
     user_folder = f"user_{user_info.userID}"
-    template_file = os.path.join(parent_folder, user_folder, "k8s-template", "issuer_template.yml")
+    template_folder = os.path.join(parent_folder, user_folder, "k8s-template")
+    issuer_template_file = os.path.join(template_folder, "issuer_template.yml")
+    namespace_template_file = os.path.join(template_folder, "namespace-template.yaml")
+    pvc_template_file = os.path.join(template_folder, "persistentvolumeclaim-template.yaml")
+    configmap_template_file = os.path.join(template_folder, "configmap-template.yml")
+    wordpress_template_file = os.path.join(template_folder, "wordpress-template.yml")
+    service_template_file = os.path.join(template_folder, "service-template.yml")
+    ingress_template_file = os.path.join(template_folder, "ingress-template.yml")
+    certificate_template_file = os.path.join(template_folder, "certificate-template.yml")
     
     try:
-        # Read the template file
-        with open(template_file, 'r') as file:
-            content = file.read()
+        # Update issuer_template.yml
+        with open(issuer_template_file, 'r') as file:
+            issuer_content = file.read()
         
-        # Replace placeholders
-        content = content.replace('{{ userID }}', str(user_info.userID))
-        content = content.replace('{{ email }}', user_info.email)
+        issuer_content = issuer_content.replace('{{ userID }}', str(user_info.userID))
+        issuer_content = issuer_content.replace('{{ email }}', user_info.email)
         
-        # Parse the updated content as YAML
-        yaml_content = yaml.safe_load(content)
+        issuer_yaml_content = yaml.safe_load(issuer_content)
         
-        # Write the updated YAML back to the file
-        with open(template_file, 'w') as file:
-            yaml.dump(yaml_content, file, default_flow_style=False)
+        with open(issuer_template_file, 'w') as file:
+            yaml.dump(issuer_yaml_content, file, default_flow_style=False)
         
-        logger.info(f"Template file '{template_file}' updated successfully")
-        return {"message": f"Template file '{template_file}' updated successfully"}
-    except FileNotFoundError:
-        logger.error(f"Template file '{template_file}' not found")
-        raise HTTPException(status_code=404, detail=f"Template file '{template_file}' not found")
+        logger.info(f"Issuer template file '{issuer_template_file}' updated successfully")
+
+        # Update namespace-template.yaml
+        with open(namespace_template_file, 'r') as file:
+            namespace_content = file.read()
+        
+        namespace_content = namespace_content.replace('{{ userID }}', str(user_info.userID))
+        
+        namespace_yaml_content = yaml.safe_load(namespace_content)
+        
+        with open(namespace_template_file, 'w') as file:
+            yaml.dump(namespace_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"Namespace template file '{namespace_template_file}' updated successfully")
+
+        # Update persistentvolumeclaim-template.yaml
+        with open(pvc_template_file, 'r') as file:
+            pvc_content = file.read()
+        
+        pvc_content = pvc_content.replace('{{ userID }}', str(user_info.userID))
+        
+        pvc_yaml_content = yaml.safe_load(pvc_content)
+        
+        with open(pvc_template_file, 'w') as file:
+            yaml.dump(pvc_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"PersistentVolumeClaim template file '{pvc_template_file}' updated successfully")
+
+        # Update configmap-template.yml
+        with open(configmap_template_file, 'r') as file:
+            configmap_content = file.read()
+        
+        configmap_content = configmap_content.replace('{{ userID }}', str(user_info.userID))
+        configmap_content = configmap_content.replace('{{ userDomain }}', user_info.userDomain)
+        
+        configmap_yaml_content = yaml.safe_load(configmap_content)
+        
+        with open(configmap_template_file, 'w') as file:
+            yaml.dump(configmap_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"ConfigMap template file '{configmap_template_file}' updated successfully")
+
+        # Update wordpress-template.yml
+        with open(wordpress_template_file, 'r') as file:
+            wordpress_content = file.read()
+        
+        wordpress_content = wordpress_content.replace('{{ userID }}', str(user_info.userID))
+        
+        wordpress_yaml_content = yaml.safe_load(wordpress_content)
+        
+        with open(wordpress_template_file, 'w') as file:
+            yaml.dump(wordpress_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"WordPress template file '{wordpress_template_file}' updated successfully")
+
+        # Update service-template.yml
+        with open(service_template_file, 'r') as file:
+            service_content = file.read()
+        
+        service_content = service_content.replace('{{ userID }}', str(user_info.userID))
+        
+        service_yaml_content = yaml.safe_load(service_content)
+        
+        with open(service_template_file, 'w') as file:
+            yaml.dump(service_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"Service template file '{service_template_file}' updated successfully")
+
+        # Update ingress-template.yml
+        with open(ingress_template_file, 'r') as file:
+            ingress_content = file.read()
+        
+        ingress_content = ingress_content.replace('{{ userID }}', str(user_info.userID))
+        ingress_content = ingress_content.replace('{{ userDomain }}', user_info.userDomain)
+        
+        ingress_yaml_content = yaml.safe_load(ingress_content)
+        
+        with open(ingress_template_file, 'w') as file:
+            yaml.dump(ingress_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"Ingress template file '{ingress_template_file}' updated successfully")
+
+        # Update certificate-template.yml
+        with open(certificate_template_file, 'r') as file:
+            certificate_content = file.read()
+        
+        certificate_content = certificate_content.replace('{{ userID }}', str(user_info.userID))
+        certificate_content = certificate_content.replace('{{ userDomain }}', user_info.userDomain)
+        
+        certificate_yaml_content = yaml.safe_load(certificate_content)
+        
+        with open(certificate_template_file, 'w') as file:
+            yaml.dump(certificate_yaml_content, file, default_flow_style=False)
+        
+        logger.info(f"Certificate template file '{certificate_template_file}' updated successfully")
+
+        return {"message": "Template files updated successfully"}
+    except FileNotFoundError as e:
+        logger.error(f"Template file not found: {str(e)}")
+        raise HTTPException(status_code=404, detail=f"Template file not found: {str(e)}")
     except Exception as e:
-        logger.error(f"Failed to update template file: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to update template file: {str(e)}")
+        logger.error(f"Failed to update template files: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update template files: {str(e)}")
 
 @app.post("/update_template_file/")
 async def update_template_file_endpoint(user_info: UserInfo):
-    return await update_template_file(user_info)
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
+
+@app.post("/update_template_files/")
+async def update_template_files_endpoint(user_info: UserInfo):
+    return await update_template_files(user_info)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
