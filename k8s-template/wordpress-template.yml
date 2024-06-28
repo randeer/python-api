@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ userID }}
-  namespace: {{ userID }}
+  name: "{{ userID }}"
+  namespace: "{{ userID }}"
   labels:
-    app: {{ userID }}
+    app: "{{ userID }}"
 spec:
   selector:
     matchLabels:
-      app: {{ userID }}
+      app: "{{ userID }}"
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ userID }}
+        app: "{{ userID }}"
     spec:
       initContainers:
       - name: fix-permissions
@@ -25,16 +25,16 @@ spec:
           mountPath: /var/www/html
       containers:
       - image: wordpress
-        name: {{ userID }}
+        name: "{{ userID }}"
         env:
         - name: WORDPRESS_DB_HOST
           value: docker.lala-1992.xyz
         - name: WORDPRESS_DB_USER
-          value: {{ userID }}
+          value: "{{ userID }}"
         - name: WORDPRESS_DB_PASSWORD
-          value: {{ userID }}
+          value: "{{ userID }}"
         - name: WORDPRESS_DB_NAME
-          value: {{ userID }} 
+          value: "{{ userID }}"
         ports:
         - containerPort: 80
           name: wordpress

@@ -2,9 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   labels:
-    app: {{ userID }}l
-  name: {{ userID }}
-  namespace: {{ userID }}
+    app: "{{ userID }}"
+  name: "{{ userID }}"
+  namespace: "{{ userID }}"
 spec:
   ingressClassName: nginx
   rules:
@@ -13,7 +13,7 @@ spec:
       paths:
       - backend:
           service:
-            name: {{ userID }}
+            name: "{{ userID }}"
             port:
               number: 80
         path: /

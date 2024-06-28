@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: apache-config
-  namespace: {{ userID }}
+  namespace: "{{ userID }}"
 data:
   httpd.conf: |
     ServerName "{{ userDomain }}"
