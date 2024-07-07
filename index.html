@@ -81,6 +81,25 @@
                 console.log('Push data successful:', pushDataResponse);
                 resultDiv.innerHTML = 'Push Data Response: ' + JSON.stringify(pushDataResponse);
                 
+                // New: Call create_wordpress_db
+                return fetch('http://20.1.190.133:8000/push_data_db/create_wordpress_db', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(createWordpressDbResponse => {
+                console.log('Create WordPress DB successful:', createWordpressDbResponse);
+                resultDiv.innerHTML += '<br><br>Create WordPress DB Response: ' + JSON.stringify(createWordpressDbResponse);
+                
                 return fetch('http://20.1.190.133:8000/create_folder/', {
                     method: 'POST',
                     headers: {
@@ -134,6 +153,24 @@
             .then(updateTemplateResponse => {
                 console.log('Update template successful:', updateTemplateResponse);
                 resultDiv.innerHTML += '<br><br>Update Template Response: ' + JSON.stringify(updateTemplateResponse);
+                
+                return fetch('http://20.1.190.133:8000/create_k8s_objects/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userID: formData.userID })
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(createK8sObjectsResponse => {
+                console.log('Create K8s objects successful:', createK8sObjectsResponse);
+                resultDiv.innerHTML += '<br><br>Create K8s Objects Response: ' + JSON.stringify(createK8sObjectsResponse);
                 
                 // Clear input fields
                 document.getElementById('username').value = '';
