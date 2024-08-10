@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: "{{ userID }}"
-  name: "{{ userID }}"
+  name: service-{{ userID }}
   namespace: "{{ userID }}"
 spec:
   ports:
