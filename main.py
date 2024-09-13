@@ -29,7 +29,7 @@ app.add_middleware(
 db_config = {
     'host': 'docker.lala-1992.xyz',
     'user': 'root',
-    'password': 'rashmikamanawadu',
+    'password': '...',
     'db': 'myapidb',
     'port': 3306
 }
